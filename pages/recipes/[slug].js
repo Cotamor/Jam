@@ -31,6 +31,16 @@ export const getStaticProps = async (context) => {
     "fields.slug": slug,
   });
 
+  console.log(res);
+  if (!res.items.length) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: { recipe: res.items[0] },
     revalidate: 1,
