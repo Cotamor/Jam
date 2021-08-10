@@ -1,6 +1,7 @@
 import { createClient } from "contentful";
 import Image from "next/image";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import Skelton from "../../components/Skelton";
 
 const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
@@ -18,7 +19,7 @@ export const getStaticPaths = async () => {
   });
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
@@ -32,11 +33,13 @@ export const getStaticProps = async (context) => {
 
   return {
     props: { recipe: res.items[0] },
+    revalidate: 1,
   };
 };
 
 export default function RecipeDetails({ recipe }) {
-  console.log(recipe.fields);
+  if (!recipe) return <Skelton />;
+  // console.log(recipe.fields);
   const { title, cookingTime, featuredImage, ingredients, method } =
     recipe.fields;
   return (
@@ -85,6 +88,17 @@ export default function RecipeDetails({ recipe }) {
         }
         .info span:last-child::after {
           content: ".";
+        }
+        @media screen and (max-width: 900px) {
+          .banner h2 {
+            font-size: 1em;
+            padding: 15px;
+            top: -30px;
+            left: -7px;
+          }
+          .method {
+            font-size: 0.8em;
+          }
         }
       `}</style>
     </div>
